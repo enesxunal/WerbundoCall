@@ -3,12 +3,15 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
   try {
-    const { id } = params;
+    // /api/firms/[id] => id'yi URL'den al
+    const url = new URL(request.url);
+    const id = url.pathname.split('/').pop();
+
+    if (!id) {
+      return NextResponse.json({ error: 'ID bulunamadı' }, { status: 400 });
+    }
 
     // Önce firmaya ait çağrıları sil
     await prisma.call.deleteMany({
