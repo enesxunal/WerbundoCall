@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Firm {
+  id        String   @id @default(uuid())
+  name      String
+  prompt    String
+  language  String
+  email     String
+  calls     Call[]
+  createdAt DateTime @default(now())
+}
+
+model Call {
+  id          String   @id @default(uuid())
+  firmId      String
+  firm        Firm     @relation(fields: [firmId], references: [id])
+  transcript  String
+  audioUrl    String
+  gptResponse String
+  createdAt   DateTime @default(now())
+}
