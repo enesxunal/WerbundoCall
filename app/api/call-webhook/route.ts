@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     const transcript = await speechToText(validatedData.RecordingUrl);
     
     // Dil algıla
-    const detectedLanguage = detectLanguage(transcript);
+    detectLanguage(transcript);
     
     // Firma bilgilerini al (şimdilik varsayılan)
     // Gerçek uygulamada To numarasına göre firma bulunacak
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     const audioUrl = await textToSpeech(gptResponse, firm.language);
     
     // Çağrıyı veritabanına kaydet
-    const call = await prisma.call.create({
+    await prisma.call.create({
       data: {
         firmId: firm.id,
         transcript,

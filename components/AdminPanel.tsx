@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { PrismaClient } from '@prisma/client';
 
 interface Firm {
   id: string;
@@ -25,7 +24,6 @@ interface Call {
 export default function AdminPanel() {
   const [firms, setFirms] = useState<Firm[]>([]);
   const [calls, setCalls] = useState<Call[]>([]);
-  const [selectedFirm, setSelectedFirm] = useState<Firm | null>(null);
   const [isAddingFirm, setIsAddingFirm] = useState(false);
   const [newFirm, setNewFirm] = useState({
     name: '',

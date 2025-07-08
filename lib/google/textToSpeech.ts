@@ -1,4 +1,6 @@
 import { TextToSpeechClient } from '@google-cloud/text-to-speech';
+import fs from 'fs';
+import path from 'path';
 
 const ttsClient = new TextToSpeechClient({
   projectId: process.env.GOOGLE_PROJECT_ID,
@@ -38,8 +40,6 @@ export async function textToSpeech(text: string, language: string = 'tr-TR'): Pr
     
     // Bu örnekte dosyayı public klasörüne kaydediyoruz
     // Gerçek uygulamada cloud storage (AWS S3, Google Cloud Storage) kullanılmalı
-    const fs = require('fs');
-    const path = require('path');
     
     const publicDir = path.join(process.cwd(), 'public', 'audio');
     if (!fs.existsSync(publicDir)) {
