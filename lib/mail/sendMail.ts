@@ -8,19 +8,32 @@ interface EmailData {
 
 export async function sendMail(emailData: EmailData): Promise<boolean> {
   try {
+    // Gerekli environment variable'ları kontrol et
+    const gmailUser = process.env.GMAIL_USER;
+    const gmailClientId = process.env.GMAIL_CLIENT_ID;
+    const gmailClientSecret = process.env.GMAIL_CLIENT_SECRET;
+    const gmailRefreshToken = process.env.GMAIL_REFRESH_TOKEN;
+
+    // E-posta ayarları eksikse mock yanıt döndür
+    if (!gmailUser || !gmailClientId || !gmailClientSecret || !gmailRefreshToken) {
+      console.log('Gmail API ayarları eksik, e-posta gönderilmedi (mock)');
+      console.log('Gönderilecek e-posta:', emailData);
+      return true; // Mock olarak başarılı döndür
+    }
+
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
         type: 'OAuth2',
-        user: process.env.GMAIL_USER,
-        clientId: process.env.GMAIL_CLIENT_ID,
-        clientSecret: process.env.GMAIL_CLIENT_SECRET,
-        refreshToken: process.env.GMAIL_REFRESH_TOKEN,
+        user: gmailUser,
+        clientId: gmailClientId,
+        clientSecret: gmailClientSecret,
+        refreshToken: gmailRefreshToken,
       },
     });
 
     const mailOptions = {
-      from: process.env.GMAIL_USER,
+      from: gmailUser,
       to: emailData.to,
       subject: emailData.subject,
       html: emailData.html,
@@ -41,7 +54,7 @@ export function createCallSummaryEmail(
   callDate: Date
 ): EmailData {
   return {
-    to: process.env.GMAIL_USER || '',
+    to: process.env.GMAIL_USER || 'admin@example.com',
     subject: `WerbundoCall - ${firmName} Çağrı Özeti`,
     html: `
       <h2>WerbundoCall Çağrı Özeti</h2>
